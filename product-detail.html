@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi Tiết Sản Phẩm - PhoneStore</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<style>
+.detail-layout { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; padding:40px 0; }
+.gallery-main { border-radius:var(--radius-xl); overflow:hidden; background:linear-gradient(135deg,#1a1a2e,#16213e); aspect-ratio:1; position:relative; }
+.gallery-main img { width:100%; height:100%; object-fit:cover; transition:var(--transition-slow); }
+.gallery-thumbs { display:flex; gap:10px; margin-top:12px; }
+.thumb { width:72px; height:72px; border-radius:var(--radius); overflow:hidden; border:2px solid var(--border); cursor:pointer; transition:var(--transition); background:var(--card); }
+.thumb.active { border-color:var(--primary); box-shadow:0 0 12px rgba(108,99,255,0.4); }
+.thumb img { width:100%; height:100%; object-fit:cover; }
+.options-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.option-btn { padding:8px 18px; border-radius:var(--radius); background:var(--surface); border:2px solid var(--border); color:var(--text-soft); font-size:0.875rem; font-weight:500; cursor:pointer; transition:var(--transition); }
+.option-btn.active, .option-btn:hover { border-color:var(--primary); color:var(--primary-light); background:rgba(108,99,255,0.1); }
+.color-dot { width:28px; height:28px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition:var(--transition); }
+.color-dot.active { border-color:var(--primary); box-shadow:0 0 8px rgba(108,99,255,0.5); transform:scale(1.15); }
+.specs-table { width:100%; border-collapse:collapse; margin-top:8px; }
+.specs-table tr { border-bottom:1px solid var(--border); }
+.specs-table tr:last-child { border:none; }
+.specs-table td { padding:12px 16px; font-size:0.875rem; }
+.specs-table td:first-child { color:var(--text-muted); width:45%; }
+.specs-table td:last-child { color:var(--text); font-weight:500; }
+.tab-btns { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:24px; }
+.tab-btn { padding:12px 20px; font-size:0.9rem; font-weight:600; color:var(--text-soft); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; transition:var(--transition); }
+.tab-btn.active { color:var(--primary-light); border-bottom-color:var(--primary); }
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:fadeIn 0.3s ease; }
+.sticky-buy { position:sticky; top:calc(var(--navbar-height)+16px); }
+@media(max-width:900px){ .detail-layout{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><div class="navbar-logo-icon">📱</div><span>Phone</span>Store</a>
+    <nav class="navbar-nav">
+      <a href="index.html" class="nav-link">Trang Chủ</a>
+      <a href="products.html" class="nav-link">Sản Phẩm</a>
+    </nav>
+    <div class="navbar-search">
+      <span class="navbar-search-icon">🔍</span>
+      <input type="text" placeholder="Tìm điện thoại..." onkeydown="if(event.key==='Enter')location.href='products.html?q='+this.value">
+    </div>
+    <div class="navbar-actions">
+      <a href="cart.html" class="nav-icon-btn">🛒<span class="cart-badge" style="display:none">0</span></a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb" id="breadcrumb">
+      <a href="index.html">🏠 Trang chủ</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="products.html">Sản phẩm</a>
+      <span class="breadcrumb-sep">›</span>
+      <span id="bc-name">...</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="detail-layout" id="detail-content">
+    <div style="text-align:center;padding:80px;grid-column:1/-1"><div class="spinner" style="margin:0 auto"></div></div>
+  </div>
+
+  <!-- TABS -->
+  <div style="margin-bottom:60px" id="tabs-section" class="hidden">
+    <div class="tab-btns">
+      <button class="tab-btn active" onclick="switchTab('specs',this)">📋 Thông Số Kỹ Thuật</button>
+      <button class="tab-btn" onclick="switchTab('reviews',this)">⭐ Đánh Giá</button>
+      <button class="tab-btn" onclick="switchTab('warranty',this)">🛡️ Bảo Hành</button>
+    </div>
+    <div class="tab-content active" id="tab-specs"></div>
+    <div class="tab-content" id="tab-reviews">
+      <div style="display:grid;gap:16px">
+        <div class="card" style="padding:20px">
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;font-weight:700">N</div>
+            <div><div style="font-weight:600;font-size:0.9rem">Nguyễn Văn A</div><div class="stars">★★★★★</div></div>
+          </div>
+          <p style="font-size:0.875rem;color:var(--text-soft)">Máy chạy rất mượt, camera chụp đẹp, pin trâu. Rất hài lòng với sản phẩm!</p>
+        </div>
+        <div class="card" style="padding:20px">
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--gradient-blue);display:flex;align-items:center;justify-content:center;font-weight:700">T</div>
+            <div><div style="font-weight:600;font-size:0.9rem">Trần Thị B</div><div class="stars">★★★★☆</div></div>
+          </div>
+          <p style="font-size:0.875rem;color:var(--text-soft)">Thiết kế đẹp, sang trọng. Giao hàng nhanh, đóng gói cẩn thận. 4.5/5!</p>
+        </div>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-warranty">
+      <div class="card" style="padding:28px">
+        <h3 style="margin-bottom:16px">🛡️ Chính Sách Bảo Hành</h3>
+        <div style="display:grid;gap:12px">
+          <div style="display:flex;gap:12px;align-items:start"><span>✅</span><span style="font-size:0.9rem;color:var(--text-soft)"><strong style="color:var(--text)">Bảo hành chính hãng 12 tháng</strong> — Tại tất cả trung tâm bảo hành ủy quyền toàn quốc</span></div>
+          <div style="display:flex;gap:12px;align-items:start"><span>✅</span><span style="font-size:0.9rem;color:var(--text-soft)"><strong style="color:var(--text)">Đổi trả 30 ngày</strong> — Đổi mới nếu lỗi sản xuất trong 30 ngày đầu</span></div>
+          <div style="display:flex;gap:12px;align-items:start"><span>✅</span><span style="font-size:0.9rem;color:var(--text-soft)"><strong style="color:var(--text)">Hỗ trợ 24/7</strong> — Tổng đài 1800 1234 miễn phí</span></div>
+          <div style="display:flex;gap:12px;align-items:start"><span>✅</span><span style="font-size:0.9rem;color:var(--text-soft)"><strong style="color:var(--text)">Bảo hành pin 6 tháng</strong> — Thay pin miễn phí nếu dung lượng dưới 80%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <div style="padding-bottom:60px" id="related-section" class="hidden">
+    <div class="section-header">
+      <div class="section-label">📱 Gợi ý</div>
+      <h2 class="section-title">Sản Phẩm <span class="text-gradient">Liên Quan</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid grid-4" id="related-grid"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2024 PhoneStore. Điện thoại chính hãng giá tốt nhất.</p>
+      <div class="payment-icons">
+        <div class="payment-icon">VISA</div><div class="payment-icon">MOMO</div><div class="payment-icon">COD</div>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+<script>
+let currentProduct=null, selColor='', selStorage='', selQty=1;
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+const colorMap={'Titan Đen':'#2C2C2E','Titan Trắng':'#F5F5F0','Titan Xanh':'#4A6FA5','Titan Tự Nhiên':'#C4A882','Đen':'#1a1a1a','Trắng':'#f0f0f0','Xanh':'#2563EB','Vàng':'#D4A017','Hồng':'#E91E8C','Tím đậm':'#4B0082','Bạc':'#C0C0C0','Vàng hồng':'#FFB347','Xanh lá':'#22C55E','Xanh dương':'#3B82F6','Xanh ngọc':'#06B6D4','Đen vũ trụ':'#1C1C1E','Hồng vàng':'#FF8C69','Xám':'#9CA3AF','Xanh biển':'#1D4ED8'};
+
+function renderDetail(p){
+  const images=[p.image,p.image,p.image];
+  selColor=p.colors[0]; selStorage=p.storage[0];
+  
+  document.getElementById('bc-name').textContent=p.name;
+  document.title=`${p.name} - PhoneStore`;
+
+  document.getElementById('detail-content').innerHTML=`
+    <div>
+      <div class="gallery-main"><img src="${p.image}" alt="${p.name}" id="main-img"></div>
+      <div class="gallery-thumbs">
+        ${images.map((img,i)=>`<div class="thumb ${i===0?'active':''}" onclick="changeImg('${img}',this)"><img src="${img}" alt="thumb"></div>`).join('')}
+      </div>
+    </div>
+    <div class="sticky-buy">
+      <div class="flex gap-8" style="margin-bottom:12px">
+        ${p.badge?`<span class="badge badge-${p.badge}">${p.badge==='hot'?'🔥 Hot':p.badge==='new'?'✨ Mới':'🏷️ Sale'}</span>`:''}
+        <span style="font-size:0.8rem;color:var(--text-muted)">Mã: PS${String(p.id).padStart(4,'0')}</span>
+      </div>
+      <h1 style="font-size:1.7rem;margin-bottom:16px">${p.name}</h1>
+      <div class="product-rating" style="margin-bottom:16px">
+        ${renderStars(p.rating)}
+        <span style="font-size:0.875rem;color:var(--text-soft)">${p.rating}/5 · ${p.reviews.toLocaleString()} đánh giá</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:28px;padding:20px;background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:var(--radius-lg)">
+        <span class="price-current" style="font-size:2rem">${formatPrice(p.price)}</span>
+        ${p.discount?`<span class="price-original" style="font-size:1rem">${formatPrice(p.originalPrice)}</span><span class="price-discount">-${p.discount}%</span>`:''}
+      </div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.82rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.5px">Màu sắc: <span id="sel-color-label" style="color:var(--text);text-transform:none">${selColor}</span></div>
+        <div class="options-row">
+          ${p.colors.map(c=>`<button class="color-dot ${c===selColor?'active':''}" style="background:${colorMap[c]||'#888'}" onclick="selColor='${c}';document.getElementById('sel-color-label').textContent='${c}';document.querySelectorAll('.color-dot').forEach(b=>b.classList.remove('active'));this.classList.add('active')" title="${c}"></button>`).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.82rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.5px">Bộ nhớ trong:</div>
+        <div class="options-row" id="storage-opts">
+          ${p.storage.map(s=>`<button class="option-btn ${s===selStorage?'active':''}" onclick="selectStorage('${s}',this)">${s}</button>`).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:24px">
+        <div style="font-size:0.82rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.5px">Số lượng:</div>
+        <div class="qty-control" style="width:fit-content">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-value" id="qty-val">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px">
+        <button class="btn btn-primary btn-lg" onclick="doAddCart()">🛒 Thêm Vào Giỏ Hàng</button>
+        <button class="btn btn-accent btn-lg" onclick="doBuyNow()">⚡ Mua Ngay</button>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:20px;flex-wrap:wrap">
+        <span style="font-size:0.8rem;color:var(--text-soft)">✅ Miễn phí giao hàng</span>
+        <span style="font-size:0.8rem;color:var(--text-soft)">🔄 Đổi trả 30 ngày</span>
+        <span style="font-size:0.8rem;color:var(--text-soft)">🛡️ BH 12 tháng</span>
+      </div>
+    </div>`;
+
+  // Specs tab
+  document.getElementById('tab-specs').innerHTML=`
+    <table class="specs-table">
+      <tr><td>Màn hình</td><td>${p.specs.display}</td></tr>
+      <tr><td>Chip xử lý</td><td>${p.specs.chip}</td></tr>
+      <tr><td>Camera sau</td><td>${p.specs.camera}</td></tr>
+      <tr><td>RAM</td><td>${p.specs.ram}</td></tr>
+      <tr><td>Pin</td><td>${p.specs.battery}</td></tr>
+      <tr><td>Hệ điều hành</td><td>${p.specs.os}</td></tr>
+      <tr><td>Trọng lượng</td><td>${p.specs.weight}</td></tr>
+    </table>`;
+
+  document.getElementById('tabs-section').classList.remove('hidden');
+  document.getElementById('related-section').classList.remove('hidden');
+
+  // Related
+  document.getElementById('related-grid').innerHTML=getRelatedProducts(p.id,4).map(renderProductCard).join('');
+  initReveal();
+}
+
+function changeImg(src,el){
+  document.getElementById('main-img').src=src;
+  document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectStorage(s,btn){
+  selStorage=s;
+  document.querySelectorAll('#storage-opts .option-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function changeQty(d){
+  selQty=Math.max(1,selQty+d);
+  document.getElementById('qty-val').textContent=selQty;
+}
+
+function doAddCart(){ if(currentProduct){ addToCart(currentProduct.id,selColor,selStorage,selQty); } }
+function doBuyNow(){ doAddCart(); setTimeout(()=>location.href='cart.html',500); }
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const id=new URLSearchParams(location.search).get('id');
+  currentProduct=id?getProductById(id):products[0];
+  if(currentProduct) renderDetail(currentProduct);
+  else document.getElementById('detail-content').innerHTML='<div class="empty-state"><div class="empty-state-icon">😕</div><h3>Không tìm thấy sản phẩm</h3><a href="products.html" class="btn btn-primary">← Quay lại</a></div>';
+});
+</script>
+</body>
+</html>

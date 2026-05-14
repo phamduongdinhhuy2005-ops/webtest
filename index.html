@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhoneStore - Điện Thoại Chính Hãng Giá Tốt</title>
+<meta name="description" content="PhoneStore - Mua điện thoại chính hãng iPhone, Samsung, Xiaomi giá tốt nhất. Bảo hành 12 tháng, giao hàng toàn quốc.">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<style>
+/* HERO */
+.hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; background: radial-gradient(ellipse at 70% 50%, rgba(108,99,255,0.12) 0%, transparent 70%); padding-top: var(--navbar-height); }
+.hero-content { position: relative; z-index: 2; max-width: 560px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.25); border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 600; color: var(--primary-light); margin-bottom: 24px; animation: fadeDown 0.6s ease; }
+.hero h1 { font-size: clamp(2.4rem,5vw,3.8rem); line-height: 1.1; margin-bottom: 20px; animation: fadeUp 0.7s ease 0.1s both; }
+.hero-desc { font-size: 1.05rem; color: var(--text-soft); margin-bottom: 36px; line-height: 1.7; animation: fadeUp 0.7s ease 0.2s both; }
+.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp 0.7s ease 0.3s both; }
+.hero-stats { display: flex; gap: 32px; margin-top: 48px; animation: fadeUp 0.7s ease 0.4s both; }
+.hero-stat-num { font-size: 1.6rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.hero-image { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 45%; max-width: 600px; animation: fadeIn 1s ease 0.5s both; }
+.hero-image img { width: 100%; object-fit: contain; filter: drop-shadow(0 40px 80px rgba(108,99,255,0.3)); animation: float 4s ease-in-out infinite; }
+.hero-floating-card { position: absolute; background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 12px 16px; box-shadow: var(--shadow-lg); }
+.hero-card-1 { top: 25%; right: 30%; animation: fadeIn 1s ease 1s both, float 5s 1s ease-in-out infinite; }
+.hero-card-2 { bottom: 25%; right: 5%; animation: fadeIn 1s ease 1.2s both, float 6s 1.2s ease-in-out infinite reverse; }
+.fc-label { font-size: 0.7rem; color: var(--text-muted); }
+.fc-val { font-size: 0.9rem; font-weight: 700; color: var(--text-bright); }
+/* BRANDS SECTION */
+.brands-section { padding: 32px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); overflow: hidden; }
+/* HERO SLIDER */
+.slider-dots { display: flex; gap: 8px; justify-content: center; margin-top: 20px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-hover); cursor: pointer; transition: var(--transition); }
+.dot.active { width: 24px; border-radius: 4px; background: var(--primary); }
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo">
+      <div class="navbar-logo-icon">📱</div>
+      <span>Phone</span>Store
+    </a>
+    <nav class="navbar-nav">
+      <a href="index.html" class="nav-link active">Trang Chủ</a>
+      <a href="products.html" class="nav-link">Sản Phẩm</a>
+      <a href="products.html?badge=sale" class="nav-link">Khuyến Mãi</a>
+      <a href="#brands-section" class="nav-link">Thương Hiệu</a>
+    </nav>
+    <div class="navbar-search">
+      <span class="navbar-search-icon">🔍</span>
+      <input type="text" id="nav-search" placeholder="Tìm điện thoại..." onkeydown="if(event.key==='Enter')location.href='products.html?q='+this.value">
+    </div>
+    <div class="navbar-actions">
+      <a href="products.html?badge=sale" class="nav-icon-btn" title="Khuyến mãi">🏷️</a>
+      <a href="cart.html" class="nav-icon-btn" title="Giỏ hàng" id="cart-btn">
+        🛒
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+    </div>
+    <button class="hamburger" onclick="document.querySelector('.navbar-nav').style.display='flex'">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-glow hero-bg-glow-1"></div>
+  <div class="hero-bg-glow hero-bg-glow-2"></div>
+  <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;width:100%">
+    <div class="hero-content">
+      <div class="hero-tag">✨ Điện thoại chính hãng · Giá tốt nhất</div>
+      <h1>Trải Nghiệm <span class="text-gradient">Công Nghệ</span> Đỉnh Cao</h1>
+      <p class="hero-desc">Khám phá bộ sưu tập điện thoại cao cấp mới nhất. iPhone, Samsung, Xiaomi và nhiều hơn nữa — tất cả với giá tốt nhất, bảo hành chính hãng 12 tháng.</p>
+      <div class="hero-btns">
+        <a href="products.html" class="btn btn-primary btn-lg">🚀 Mua Ngay</a>
+        <a href="products.html?badge=sale" class="btn btn-outline btn-lg">🏷️ Xem Khuyến Mãi</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num">500+</div><div class="hero-stat-label">Sản phẩm</div></div>
+        <div><div class="hero-stat-num">50K+</div><div class="hero-stat-label">Khách hàng</div></div>
+        <div><div class="hero-stat-num">4.9★</div><div class="hero-stat-label">Đánh giá</div></div>
+      </div>
+    </div>
+    <div style="position:relative;display:flex;justify-content:center;align-items:center;">
+      <div style="position:relative;width:100%;max-width:420px;">
+        <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&q=80" alt="iPhone 15 Pro Max" style="width:100%;border-radius:24px;object-fit:cover;box-shadow:0 40px 100px rgba(108,99,255,0.3);animation:float 4s ease-in-out infinite;">
+        <div class="hero-floating-card hero-card-1">
+          <div class="fc-label">🔥 Bán chạy nhất</div>
+          <div class="fc-val">iPhone 15 Pro Max</div>
+        </div>
+        <div class="hero-floating-card hero-card-2">
+          <div class="fc-label">💰 Giá chỉ từ</div>
+          <div class="fc-val" style="color:var(--accent)">5.990.000đ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS SCROLL -->
+<section class="brands-section" id="brands-section">
+  <div class="brands-strip">
+    <div class="brands-track" id="brands-track"></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">📂 Danh mục</div>
+      <h2 class="section-title">Tìm Theo <span class="text-gradient">Thương Hiệu</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid grid-4 gap-16" id="categories-grid"></div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">🔥 Nổi bật</div>
+      <h2 class="section-title">Sản Phẩm <span class="text-gradient">Hot Nhất</span></h2>
+      <div class="divider"></div>
+      <p class="section-desc">Những chiếc điện thoại được yêu thích và bán chạy nhất tháng này</p>
+    </div>
+    <div class="grid grid-4" id="featured-grid"></div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="products.html" class="btn btn-outline btn-lg">Xem tất cả sản phẩm →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROMO BANNER -->
+<section class="section">
+  <div class="container">
+    <div class="promo-banner reveal">
+      <div>
+        <div class="promo-label">⚡ Flash Sale</div>
+        <h2 class="promo-title">Giảm Đến <span class="text-gradient">30%</span><br>Điện Thoại Cao Cấp</h2>
+        <p class="promo-desc">Ưu đãi có hạn — Đừng bỏ lỡ cơ hội sở hữu smartphone đỉnh cao</p>
+        <div class="countdown" id="countdown">
+          <div class="countdown-item"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-label">Giờ</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-item"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-label">Phút</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-item"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-label">Giây</div></div>
+        </div>
+        <a href="products.html?badge=sale" class="btn btn-accent btn-lg">🏷️ Mua Ngay</a>
+      </div>
+      <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80" alt="Sale" style="width:300px;border-radius:20px;object-fit:cover;animation:float 4s ease-in-out infinite;box-shadow:0 20px 60px rgba(255,107,107,0.2)">
+    </div>
+  </div>
+</section>
+
+<!-- NEW ARRIVALS -->
+<section class="section" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">✨ Mới nhất</div>
+      <h2 class="section-title">Vừa <span class="text-gradient-blue">Ra Mắt</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid grid-4" id="new-grid"></div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">💎 Cam kết</div>
+      <h2 class="section-title">Tại Sao Chọn <span class="text-gradient">PhoneStore?</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid grid-4 gap-24">
+      <div class="card reveal delay-100" style="padding:28px;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:16px">🛡️</div>
+        <h3 style="font-size:1rem;margin-bottom:8px">Chính Hãng 100%</h3>
+        <p style="font-size:0.85rem;color:var(--text-soft);line-height:1.6">Tất cả sản phẩm đều có nguồn gốc rõ ràng, tem chính hãng, bảo hành đầy đủ</p>
+      </div>
+      <div class="card reveal delay-200" style="padding:28px;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:16px">🚚</div>
+        <h3 style="font-size:1rem;margin-bottom:8px">Giao Hàng Nhanh</h3>
+        <p style="font-size:0.85rem;color:var(--text-soft);line-height:1.6">Giao hàng trong 2 giờ nội thành, toàn quốc trong 1-3 ngày làm việc</p>
+      </div>
+      <div class="card reveal delay-300" style="padding:28px;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:16px">💳</div>
+        <h3 style="font-size:1rem;margin-bottom:8px">Trả Góp 0%</h3>
+        <p style="font-size:0.85rem;color:var(--text-soft);line-height:1.6">Hỗ trợ trả góp 0% lãi suất qua thẻ tín dụng và các ứng dụng BNPL</p>
+      </div>
+      <div class="card reveal delay-400" style="padding:28px;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:16px">🔄</div>
+        <h3 style="font-size:1rem;margin-bottom:8px">Đổi Trả 30 Ngày</h3>
+        <p style="font-size:0.85rem;color:var(--text-soft);line-height:1.6">Đổi trả miễn phí trong 30 ngày nếu sản phẩm có lỗi từ nhà sản xuất</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="navbar-logo">
+          <div class="navbar-logo-icon">📱</div>
+          <span>Phone</span>Store
+        </a>
+        <p>Hệ thống bán lẻ điện thoại chính hãng hàng đầu Việt Nam. Cam kết giá tốt, chất lượng thật.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn">f</a>
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">yt</a>
+          <a href="#" class="social-btn">tt</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Sản Phẩm</h4>
+        <div class="footer-links">
+          <a href="products.html?cat=apple">iPhone</a>
+          <a href="products.html?cat=samsung">Samsung</a>
+          <a href="products.html?cat=xiaomi">Xiaomi</a>
+          <a href="products.html?cat=oppo">OPPO</a>
+          <a href="products.html?badge=sale">Khuyến mãi</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Hỗ Trợ</h4>
+        <div class="footer-links">
+          <a href="#">Chính sách bảo hành</a>
+          <a href="#">Đổi trả hàng</a>
+          <a href="#">Tra cứu đơn hàng</a>
+          <a href="#">Hướng dẫn mua hàng</a>
+          <a href="#">Liên hệ</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Liên Hệ</h4>
+        <div class="footer-links">
+          <a href="#">📍 123 Điện Biên Phủ, HCM</a>
+          <a href="#">📞 1800 1234 (Miễn phí)</a>
+          <a href="#">✉️ support@phonestore.vn</a>
+          <a href="#">⏰ 8:00 - 22:00 hàng ngày</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2024 PhoneStore. Bản quyền thuộc về PhoneStore Việt Nam.</p>
+      <div class="payment-icons">
+        <div class="payment-icon">VISA</div>
+        <div class="payment-icon">MC</div>
+        <div class="payment-icon">MOMO</div>
+        <div class="payment-icon">ZaloPay</div>
+        <div class="payment-icon">COD</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  // Brands scroll
+  const brandNames=['Apple','Samsung','Xiaomi','OPPO','Vivo','Google','OnePlus','Realme','Nothing','Sony','Huawei','Nokia'];
+  const track=document.getElementById('brands-track');
+  const doubled=[...brandNames,...brandNames];
+  track.innerHTML=doubled.map(b=>`<div class="brand-item">${b}</div>`).join('<span style="color:var(--border-hover)">·</span>');
+
+  // Categories
+  const cg=document.getElementById('categories-grid');
+  cg.innerHTML=categories.map(c=>`
+    <a href="products.html?cat=${c.id}" class="category-card reveal">
+      <div class="category-icon">${c.icon}</div>
+      <div class="category-name">${c.name}</div>
+      <div class="category-count">${c.count} sản phẩm</div>
+    </a>`).join('');
+
+  // Featured
+  document.getElementById('featured-grid').innerHTML=getFeaturedProducts().map(renderProductCard).join('');
+
+  // New arrivals
+  const newProds=products.filter(p=>p.badge==='new').slice(0,4);
+  document.getElementById('new-grid').innerHTML=newProds.map(renderProductCard).join('');
+
+  // Countdown — end of today midnight + 12h
+  const end=new Date(); end.setHours(end.getHours()+12,0,0,0);
+  initCountdown(end);
+  initReveal();
+});
+</script>
+</body>
+</html>

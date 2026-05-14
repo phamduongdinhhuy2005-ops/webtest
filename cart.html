@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giỏ Hàng - PhoneStore</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<style>
+.cart-layout { display:grid; grid-template-columns:1fr 380px; gap:28px; padding:32px 0 60px; }
+@media(max-width:900px){ .cart-layout{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><div class="navbar-logo-icon">📱</div><span>Phone</span>Store</a>
+    <nav class="navbar-nav">
+      <a href="index.html" class="nav-link">Trang Chủ</a>
+      <a href="products.html" class="nav-link">Sản Phẩm</a>
+    </nav>
+    <div class="navbar-actions">
+      <a href="cart.html" class="nav-icon-btn">🛒<span class="cart-badge" style="display:none">0</span></a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">🏠 Trang chủ</a><span class="breadcrumb-sep">›</span><span>Giỏ hàng</span></div>
+    <h1 style="margin-top:8px">🛒 Giỏ Hàng Của Bạn</h1>
+  </div>
+</div>
+
+<div class="container">
+  <!-- STEPS -->
+  <div style="display:flex;align-items:center;justify-content:center;gap:0;padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700">1</div>
+      <span style="font-weight:600;color:var(--primary-light);font-size:0.9rem">Giỏ hàng</span>
+    </div>
+    <div style="width:60px;height:2px;background:var(--border);margin:0 12px"></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:2px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700">2</div>
+      <span style="color:var(--text-muted);font-size:0.9rem">Thanh toán</span>
+    </div>
+    <div style="width:60px;height:2px;background:var(--border);margin:0 12px"></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:2px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700">3</div>
+      <span style="color:var(--text-muted);font-size:0.9rem">Hoàn thành</span>
+    </div>
+  </div>
+
+  <div class="cart-layout">
+    <!-- ITEMS -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <h2 style="font-size:1.1rem" id="cart-item-count">0 sản phẩm</h2>
+        <button class="btn btn-ghost btn-sm" onclick="if(confirm('Xóa toàn bộ giỏ hàng?')){clearCart();renderCart();}">🗑️ Xóa tất cả</button>
+      </div>
+      <div id="cart-items-list"></div>
+      <div style="margin-top:20px">
+        <a href="products.html" class="btn btn-ghost">← Tiếp tục mua hàng</a>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div>
+      <div class="order-summary">
+        <h3>📋 Tổng Đơn Hàng</h3>
+        <div class="summary-row"><span>Tạm tính</span><span id="subtotal">0đ</span></div>
+        <div class="summary-row"><span>Phí vận chuyển</span><span id="shipping-fee" style="color:var(--accent-green)">Miễn phí</span></div>
+        <div class="summary-row" id="discount-row" style="display:none"><span>Giảm giá</span><span id="discount-val" style="color:var(--accent-green)">-0đ</span></div>
+        <div class="summary-row total"><span>Tổng cộng</span><span class="price" id="total">0đ</span></div>
+
+        <!-- Coupon -->
+        <div class="coupon-input">
+          <input type="text" id="coupon-input" placeholder="Mã giảm giá (PHONE10, SALE20, VIP30)" style="font-size:0.8rem">
+          <button class="btn btn-outline btn-sm" onclick="doApplyCoupon()">Áp dụng</button>
+        </div>
+        <div id="coupon-msg" style="font-size:0.8rem;margin-bottom:12px"></div>
+
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doCheckout()">
+          Tiến Hành Thanh Toán →
+        </button>
+        <div style="text-align:center;margin-top:12px;font-size:0.78rem;color:var(--text-muted)">🔒 Thanh toán an toàn & bảo mật</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container"><div class="footer-bottom"><p>© 2024 PhoneStore.</p></div></div>
+</footer>
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+<script>
+let couponDiscount=0;
+
+function renderCart(){
+  const cart=getCart();
+  const list=document.getElementById('cart-items-list');
+  const count=document.getElementById('cart-item-count');
+  count.textContent=`${cart.length} sản phẩm`;
+  if(!cart.length){
+    list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🛒</div><h3>Giỏ hàng trống</h3><p>Hãy thêm sản phẩm vào giỏ hàng của bạn</p><a href="products.html" class="btn btn-primary">🚀 Mua Ngay</a></div>`;
+    updateSummary(0);
+    return;
+  }
+  list.innerHTML=cart.map(item=>`
+    <div class="cart-item animate-fadeUp" id="item-${item.key.replace(/[^a-z0-9]/gi,'_')}">
+      <div class="cart-item-img"><img src="${item.image}" alt="${item.name}"></div>
+      <div class="cart-item-info" style="flex:1">
+        <div class="cart-item-brand">${item.brand}</div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${item.color} · ${item.storage}</div>
+        <div class="cart-item-bottom">
+          <div class="qty-control">
+            <button class="qty-btn" onclick="doUpdateQty('${item.key}',-1)">−</button>
+            <div class="qty-value">${item.qty}</div>
+            <button class="qty-btn" onclick="doUpdateQty('${item.key}',1)">+</button>
+          </div>
+          <div class="cart-item-price">${formatPrice(item.price*item.qty)}</div>
+          <button class="cart-item-remove" onclick="doRemove('${item.key}')">🗑️ Xóa</button>
+        </div>
+      </div>
+    </div>`).join('<div style="height:12px"></div>');
+  updateSummary(getCartTotal());
+}
+
+function doUpdateQty(key, delta){ updateQty(key,delta); renderCart(); }
+function doRemove(key){ removeFromCart(key); renderCart(); }
+
+function updateSummary(sub){
+  const disc=Math.round(sub*couponDiscount/100);
+  const total=sub-disc;
+  document.getElementById('subtotal').textContent=formatPrice(sub);
+  document.getElementById('total').textContent=formatPrice(total);
+  const dr=document.getElementById('discount-row');
+  if(disc>0){dr.style.display='flex';document.getElementById('discount-val').textContent='-'+formatPrice(disc);}
+  else dr.style.display='none';
+  document.getElementById('shipping-fee').textContent=sub>=500000?'Miễn phí':formatPrice(30000);
+}
+
+function doApplyCoupon(){
+  const code=document.getElementById('coupon-input').value.trim();
+  const res=applyCoupon(code);
+  const msg=document.getElementById('coupon-msg');
+  if(res.valid){
+    couponDiscount=res.discount;
+    msg.innerHTML=`<span style="color:var(--accent-green)">✅ Áp dụng thành công! Giảm ${res.discount}%</span>`;
+    updateSummary(getCartTotal());
+  } else {
+    msg.innerHTML=`<span style="color:var(--accent)">❌ Mã không hợp lệ. Thử: PHONE10, SALE20, VIP30</span>`;
+  }
+}
+
+function doCheckout(){
+  if(!getCart().length){showToast('Giỏ hàng trống!','error');return;}
+  localStorage.setItem('coupon_discount',couponDiscount);
+  location.href='checkout.html';
+}
+
+document.addEventListener('DOMContentLoaded',renderCart);
+</script>
+</body>
+</html>

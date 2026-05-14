@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sản Phẩm - PhoneStore</title>
+<meta name="description" content="Danh sách điện thoại chính hãng. Lọc theo hãng, giá, tìm kiếm dễ dàng.">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<style>
+.products-layout { display: grid; grid-template-columns: var(--sidebar-width) 1fr; gap: 28px; padding-top: 32px; padding-bottom: 60px; }
+.mobile-filter-btn { display: none; }
+@media(max-width:900px){ .filter-sidebar{display:none;} .mobile-filter-btn{display:flex;} .products-layout{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><div class="navbar-logo-icon">📱</div><span>Phone</span>Store</a>
+    <nav class="navbar-nav">
+      <a href="index.html" class="nav-link">Trang Chủ</a>
+      <a href="products.html" class="nav-link active">Sản Phẩm</a>
+      <a href="products.html?badge=sale" class="nav-link">Khuyến Mãi</a>
+    </nav>
+    <div class="navbar-search">
+      <span class="navbar-search-icon">🔍</span>
+      <input type="text" id="nav-search" placeholder="Tìm điện thoại..." oninput="onSearch(this.value)" id="search-input">
+    </div>
+    <div class="navbar-actions">
+      <a href="cart.html" class="nav-icon-btn">🛒<span class="cart-badge" style="display:none">0</span></a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">🏠 Trang chủ</a><span class="breadcrumb-sep">›</span><span>Sản Phẩm</span></div>
+    <h1 style="margin-top:8px">Tất Cả Điện Thoại</h1>
+  </div>
+</div>
+
+<!-- Category Quick Filter -->
+<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:12px 0;overflow-x:auto">
+  <div class="container">
+    <div style="display:flex;gap:8px;white-space:nowrap">
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('')" id="cat-all" style="border-color:var(--primary);color:var(--primary)">Tất cả</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('apple')" id="cat-apple">🍎 Apple</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('samsung')" id="cat-samsung">📱 Samsung</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('xiaomi')" id="cat-xiaomi">⚡ Xiaomi</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('oppo')" id="cat-oppo">📷 OPPO</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('vivo')" id="cat-vivo">💫 Vivo</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('google')" id="cat-google">🔍 Google</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('nothing')" id="cat-nothing">🔲 Nothing</button>
+      <button class="btn btn-sm btn-ghost" onclick="filterCat('oneplus')" id="cat-oneplus">🚀 OnePlus</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="products-layout">
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="filter-sidebar">
+        <div class="filter-title">
+          <span>🔧 Bộ lọc</span>
+          <span class="filter-clear" onclick="clearFilters()">Xóa tất cả</span>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Thương hiệu</div>
+          <div class="filter-options" id="brand-filters"></div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Giá tối đa</div>
+          <div class="price-range">
+            <input type="range" class="price-slider" id="price-slider" min="5000000" max="40000000" value="40000000" step="500000">
+            <div class="price-labels">
+              <span>5 triệu</span>
+              <span id="price-max-label">40 triệu</span>
+            </div>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Trạng thái</div>
+          <div class="filter-options">
+            <label class="filter-option" onclick="toggleBadge('hot',this)">
+              <div class="filter-checkbox" id="cb-hot">✓</div>
+              <span class="filter-option-label">🔥 Đang Hot</span>
+            </label>
+            <label class="filter-option" onclick="toggleBadge('new',this)">
+              <div class="filter-checkbox" id="cb-new">✓</div>
+              <span class="filter-option-label">✨ Hàng Mới</span>
+            </label>
+            <label class="filter-option" onclick="toggleBadge('sale',this)">
+              <div class="filter-checkbox" id="cb-sale">✓</div>
+              <span class="filter-option-label">🏷️ Đang Giảm Giá</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main>
+      <div class="sort-bar">
+        <div class="sort-bar-left">
+          <span class="results-count"><span id="results-count">22</span> sản phẩm</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <select class="sort-select" onchange="onSortChange(this.value)">
+            <option value="popular">Phổ biến nhất</option>
+            <option value="price-asc">Giá tăng dần</option>
+            <option value="price-desc">Giá giảm dần</option>
+            <option value="newest">Mới nhất</option>
+            <option value="rating">Đánh giá cao</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-3" id="products-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:60px"><div class="spinner" style="margin:0 auto"></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2024 PhoneStore. Điện thoại chính hãng giá tốt nhất.</p>
+      <div class="payment-icons">
+        <div class="payment-icon">VISA</div><div class="payment-icon">MC</div><div class="payment-icon">MOMO</div>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+<script src="js/products.js"></script>
+<script>
+function filterCat(cat){
+  document.querySelectorAll('[id^="cat-"]').forEach(b=>b.style.borderColor='');
+  const active=document.getElementById('cat-'+(cat||'all'));
+  if(active){active.style.borderColor='var(--primary)';active.style.color='var(--primary)';}
+  if(cat){activeFilters.brands=[cat];}else{activeFilters.brands=[];}
+  applyFilters();
+}
+function toggleBadge(badge,el){
+  const cb=el.querySelector('.filter-checkbox');
+  const idx=activeFilters.badges.indexOf(badge);
+  if(idx>-1){activeFilters.badges.splice(idx,1);cb.classList.remove('checked');el.classList.remove('checked');}
+  else{activeFilters.badges.push(badge);cb.classList.add('checked');el.classList.add('checked');}
+  applyFilters();
+}
+// Handle URL params
+const params=new URLSearchParams(location.search);
+const urlCat=params.get('cat');
+if(urlCat){ document.addEventListener('DOMContentLoaded',()=>filterCat(urlCat)); }
+const urlBadge=params.get('badge');
+if(urlBadge){ document.addEventListener('DOMContentLoaded',()=>{ 
+  const el=document.querySelector(`[onclick*="'${urlBadge}'"]`);
+  if(el) toggleBadge(urlBadge,el);
+}); }
+</script>
+</body>
+</html>
