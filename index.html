@@ -299,5 +299,30 @@ document.addEventListener('DOMContentLoaded',()=>{
   initReveal();
 });
 </script>
+<!-- CHATBOT WIDGET -->
+<div class="chatbot-widget" id="chatbot-widget">
+  <button class="chatbot-toggle" onclick="toggleChat()" id="chat-toggle-btn">
+    💬 Chat với AI
+  </button>
+  <div class="chatbot-window hidden" id="chatbot-window">
+    <div class="chatbot-header">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:10px;height:10px;background:#22D3EE;border-radius:50%;box-shadow:0 0 8px #22D3EE"></div>
+        <strong>PhoneStore AI Assistant</strong>
+      </div>
+      <button onclick="toggleChat()" style="background:none;border:none;color:white;cursor:pointer">✖</button>
+    </div>
+    <div class="chatbot-messages" id="chat-messages">
+      <div class="chat-msg ai-msg">
+        Chào bạn! Tôi là AI tư vấn viên của PhoneStore. Bạn cần tìm điện thoại hãng nào, tầm giá bao nhiêu ạ? 🤖
+      </div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" id="chat-input" placeholder="Nhập câu hỏi..." onkeydown="if(event.key==='Enter') sendChat()">
+      <button onclick="sendChat()">Gửi</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

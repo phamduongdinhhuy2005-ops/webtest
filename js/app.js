@@ -117,3 +117,53 @@ document.addEventListener('DOMContentLoaded',()=>{
   initNavbar();
   initReveal();
 });
+
+// ============================================
+// CHATBOT LOGIC
+// ============================================
+function toggleChat() {
+  const window = document.getElementById('chatbot-window');
+  window.classList.toggle('hidden');
+  if(!window.classList.contains('hidden')){
+    document.getElementById('chat-input').focus();
+  }
+}
+
+async function sendChat() {
+  const inputEl = document.getElementById('chat-input');
+  const message = inputEl.value.trim();
+  if(!message) return;
+  
+  const messagesBox = document.getElementById('chat-messages');
+  
+  // 1. Thêm tin nhắn của người dùng vào UI
+  messagesBox.innerHTML += `<div class="chat-msg user-msg">${message}</div>`;
+  inputEl.value = '';
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+  
+  // 2. Hiện "AI đang gõ..."
+  const typingId = 'typing-' + Date.now();
+  messagesBox.innerHTML += `<div class="chat-msg ai-msg typing-indicator" id="${typingId}">Đang trả lời...</div>`;
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  try {
+    // 3. Gọi Backend Node.js
+    const response = await fetch('http://localhost:3000/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+    
+    if(!response.ok) throw new Error('Lỗi từ server');
+    const data = await response.json();
+    
+    // 4. Xóa chữ "đang gõ" và hiện tin nhắn AI
+    document.getElementById(typingId).remove();
+    messagesBox.innerHTML += `<div class="chat-msg ai-msg">${data.reply}</div>`;
+    
+  } catch (error) {
+    document.getElementById(typingId).remove();
+    messagesBox.innerHTML += `<div class="chat-msg ai-msg" style="color:var(--accent)">Xin lỗi, máy chủ AI đang bận hoặc chưa được bật. Vui lòng thử lại sau!</div>`;
+  }
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+}
