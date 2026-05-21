@@ -25,7 +25,7 @@
     </nav>
     <div class="navbar-search">
       <span class="navbar-search-icon">🔍</span>
-      <input type="text" id="nav-search" placeholder="Tìm điện thoại..." oninput="onSearch(this.value)" id="search-input">
+      <input type="text" id="search-input" placeholder="Tìm điện thoại..." oninput="onSearch(this.value)">
     </div>
     <div class="navbar-actions">
       <a href="cart.html" class="nav-icon-btn">🛒<span class="cart-badge" style="display:none">0</span></a>
@@ -102,6 +102,51 @@
 
     <!-- MAIN -->
     <main>
+      <section class="ai-recommend-panel">
+        <div class="ai-recommend-header">
+          <div>
+            <div class="section-label">AI Recommendation</div>
+            <h2>Gợi ý điện thoại theo nhu cầu</h2>
+          </div>
+          <span class="ai-recommend-status" id="ai-rec-status">Sẵn sàng</span>
+        </div>
+        <div class="ai-recommend-form">
+          <div class="form-group ai-need-field">
+            <label class="form-label" for="ai-need">Nhu cầu sử dụng</label>
+            <textarea class="form-control" id="ai-need" rows="3" placeholder="Ví dụ: pin tốt, chụp ảnh đẹp, giá dưới 20 triệu"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ai-brand">Hãng</label>
+            <select class="form-control" id="ai-brand">
+              <option value="">Tất cả hãng</option>
+              <option value="Apple">Apple</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Xiaomi">Xiaomi</option>
+              <option value="OPPO">OPPO</option>
+              <option value="Vivo">Vivo</option>
+              <option value="Google">Google</option>
+              <option value="OnePlus">OnePlus</option>
+              <option value="Realme">Realme</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ai-budget">Ngân sách tối đa</label>
+            <select class="form-control" id="ai-budget">
+              <option value="">Không giới hạn</option>
+              <option value="10000000">Dưới 10 triệu</option>
+              <option value="15000000">Dưới 15 triệu</option>
+              <option value="20000000">Dưới 20 triệu</option>
+              <option value="30000000">Dưới 30 triệu</option>
+              <option value="40000000">Dưới 40 triệu</option>
+            </select>
+          </div>
+          <button class="btn btn-primary ai-recommend-submit" type="button" onclick="requestAiRecommendations()">
+            Gợi ý bằng AI
+          </button>
+        </div>
+        <div class="ai-recommend-results" id="ai-recommend-results"></div>
+      </section>
+
       <div class="sort-bar">
         <div class="sort-bar-left">
           <span class="results-count"><span id="results-count">22</span> sản phẩm</span>

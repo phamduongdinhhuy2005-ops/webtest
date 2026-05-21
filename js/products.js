@@ -64,7 +64,7 @@ function applySort(){
 function renderGrid(){
   const grid=document.getElementById('products-grid');
   const count=document.getElementById('results-count');
-  if(count) count.textContent=`${filtered.length} sản phẩm`;
+  if(count) count.textContent=filtered.length;
   if(!grid) return;
   if(!filtered.length){
     grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🔍</div><h3>Không tìm thấy sản phẩm</h3><p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p><button class="btn btn-outline" onclick="clearFilters()">Xóa bộ lọc</button></div>`;
@@ -94,6 +94,87 @@ function onSortChange(val){ sortBy=val; applySort(); }
 function onSearch(val){
   if(val.trim()) filterBySearch(val);
   else {filtered=[...products];applySort();}
+}
+
+function setAiRecommendationStatus(text, type='idle'){
+  const status=document.getElementById('ai-rec-status');
+  if(!status) return;
+  status.textContent=text;
+  status.className=`ai-recommend-status ${type}`;
+}
+
+function renderAiRecommendationCard(item){
+  return `
+    <article class="ai-rec-card">
+      <button class="ai-rec-media" onclick="location.href='product-detail.html?id=${item.id}'" type="button">
+        <img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy">
+      </button>
+      <div class="ai-rec-content">
+        <div class="product-brand">${escapeHtml(item.brand)}</div>
+        <h3>${escapeHtml(item.name)}</h3>
+        <div class="product-rating">
+          ${renderStars(item.rating)}
+          <span class="count">(${Number(item.reviews||0).toLocaleString()})</span>
+        </div>
+        <div class="product-pricing">
+          <span class="price-current">${formatPrice(item.price)}</span>
+        </div>
+        <p class="ai-rec-reason">${escapeHtml(item.reason || 'Sản phẩm phù hợp với nhu cầu bạn đã nhập.')}</p>
+        <div class="ai-rec-actions">
+          <button class="btn btn-primary btn-sm" onclick="quickAddCart(${item.id})">Thêm vào giỏ</button>
+          <button class="btn btn-outline btn-sm" onclick="location.href='product-detail.html?id=${item.id}'">Xem chi tiết</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+async function requestAiRecommendations(){
+  const needEl=document.getElementById('ai-need');
+  const brandEl=document.getElementById('ai-brand');
+  const budgetEl=document.getElementById('ai-budget');
+  const results=document.getElementById('ai-recommend-results');
+  if(!needEl||!results) return;
+
+  const need=needEl.value.trim();
+  if(!need){
+    setAiRecommendationStatus('Cần nhập nhu cầu','error');
+    results.innerHTML='<div class="ai-rec-empty">Nhập nhu cầu sử dụng để AI có cơ sở gợi ý sản phẩm phù hợp.</div>';
+    needEl.focus();
+    return;
+  }
+
+  const payload={
+    need,
+    brand: brandEl ? brandEl.value : '',
+    maxPrice: budgetEl && budgetEl.value ? Number(budgetEl.value) : undefined,
+    limit: 4
+  };
+
+  setAiRecommendationStatus('Đang phân tích','loading');
+  results.innerHTML='<div class="ai-rec-loading"><div class="spinner"></div><span>AI đang chọn sản phẩm phù hợp...</span></div>';
+
+  try{
+    const response=await fetch('http://localhost:3000/api/ai-recommendations',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||'Không thể lấy gợi ý AI');
+
+    const recommendations=Array.isArray(data.recommendations)?data.recommendations:[];
+    if(!recommendations.length){
+      setAiRecommendationStatus('Chưa có kết quả','error');
+      results.innerHTML='<div class="ai-rec-empty">AI chưa tìm thấy sản phẩm phù hợp. Thử nới ngân sách hoặc mô tả nhu cầu rộng hơn.</div>';
+      return;
+    }
+
+    setAiRecommendationStatus(`${recommendations.length} gợi ý${data.modelUsed ? ` • ${data.modelUsed}` : ''}`,'success');
+    results.innerHTML=recommendations.map(renderAiRecommendationCard).join('');
+  }catch(error){
+    setAiRecommendationStatus('Lỗi gợi ý','error');
+    results.innerHTML=`<div class="ai-rec-empty">${escapeHtml(error.message || 'Không thể tạo gợi ý sản phẩm lúc này.')}</div>`;
+  }
 }
 
 document.addEventListener('DOMContentLoaded',()=>{

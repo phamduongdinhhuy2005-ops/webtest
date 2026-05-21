@@ -112,6 +112,16 @@ function toggleWish(id, btn){
 // Quick view (redirect)
 function quickView(id){ location.href=`product-detail.html?id=${id}`; }
 
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[char]));
+}
+
 // Init
 document.addEventListener('DOMContentLoaded',()=>{
   initNavbar();
@@ -137,7 +147,7 @@ async function sendChat() {
   const messagesBox = document.getElementById('chat-messages');
   
   // 1. Thêm tin nhắn của người dùng vào UI
-  messagesBox.innerHTML += `<div class="chat-msg user-msg">${message}</div>`;
+  messagesBox.innerHTML += `<div class="chat-msg user-msg">${escapeHtml(message)}</div>`;
   inputEl.value = '';
   messagesBox.scrollTop = messagesBox.scrollHeight;
   
@@ -154,16 +164,16 @@ async function sendChat() {
       body: JSON.stringify({ message })
     });
     
-    if(!response.ok) throw new Error('Lỗi từ server');
     const data = await response.json();
+    if(!response.ok) throw new Error(data.error || 'Lỗi từ server');
     
     // 4. Xóa chữ "đang gõ" và hiện tin nhắn AI
     document.getElementById(typingId).remove();
-    messagesBox.innerHTML += `<div class="chat-msg ai-msg">${data.reply}</div>`;
+    messagesBox.innerHTML += `<div class="chat-msg ai-msg">${escapeHtml(data.reply)}</div>`;
     
   } catch (error) {
     document.getElementById(typingId).remove();
-    messagesBox.innerHTML += `<div class="chat-msg ai-msg" style="color:var(--accent)">Xin lỗi, máy chủ AI đang bận hoặc chưa được bật. Vui lòng thử lại sau!</div>`;
+    messagesBox.innerHTML += `<div class="chat-msg ai-msg" style="color:var(--accent)">${escapeHtml(error.message || 'Xin lỗi, máy chủ AI đang bận hoặc chưa được bật. Vui lòng thử lại sau!')}</div>`;
   }
   messagesBox.scrollTop = messagesBox.scrollHeight;
 }
